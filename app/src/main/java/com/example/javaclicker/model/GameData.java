@@ -2,6 +2,7 @@ package com.example.javaclicker.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.room.Room;
@@ -117,10 +118,42 @@ public class GameData extends Observable {
                 }
             });
 
+
+
+        }
+
+        private void Handler() throws InterruptedException {
+            Thread.sleep(3000);
+            for (ShopItem item : shopItems){
+                switch (item.type){
+                    case "oil" :
+                        barrels(barrels() + (item.amount * item.modifier));
+                        break;
+                    case "gas" :
+                        if(barrels() <= (item.amount * item.modifier)){
+                            gas(gas() + barrels());
+                            barrels(0);
+                        }else{
+                            barrels(barrels() - (item.amount * item.modifier));
+                            gas((item.amount * item.modifier));
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void SaveHandler() throws InterruptedException {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        Thread.sleep(30000);
+                        SavePref();
+                        Save(db);
+                        activity.runOnUiThread(()->{
+                            Toast.makeText(activity, "Game Saved", Toast.LENGTH_SHORT).show();
+
+                        });
                         SaveHandler();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -128,23 +161,6 @@ public class GameData extends Observable {
                 }
             });
 
-        }
-
-        private void Handler() throws InterruptedException {
-            while(true){
-                Thread.sleep(1000);
-            }
-        }
-
-        private void SaveHandler() throws InterruptedException {
-            while(true){
-                Thread.sleep(30000);
-                SavePref();
-                Save(db);
-                activity.runOnUiThread(()->{
-                    Toast.makeText(activity, "Game Saved", Toast.LENGTH_SHORT).show();
-                });
-            }
         }
 
     }

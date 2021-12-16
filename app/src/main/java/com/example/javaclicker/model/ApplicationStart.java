@@ -24,10 +24,10 @@ public class ApplicationStart extends Application {
     public void firstApplicationRun(){
         ShopItemDao shopItemDao = db.shopItemDao();
         ShopItem[] shopItems = new ShopItem[]{
-                new ShopItem("Worker",10,1,0),
-                new ShopItem("Well",1000,10,0),
-                new ShopItem("Rig",5000,100,0),
-                new ShopItem("Gasoline Factory",10000,100,0)
+                new ShopItem("Worker",100,1,"oil",0),
+                new ShopItem("Well",15000,10,"oil",0),
+                new ShopItem("Rig",150000,100,"oil",0),
+                new ShopItem("Gasoline Factory",300000,10,"gas",0)
         };
         shopItemDao.insertAll(shopItems);
     }

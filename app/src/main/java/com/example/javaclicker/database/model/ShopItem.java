@@ -19,13 +19,17 @@ public class ShopItem {
     @ColumnInfo(name = "modifier")
     public int modifier;
 
+    @ColumnInfo(name = "type")
+    public String type;
+
     @ColumnInfo(name = "amount")
     public int amount;
 
-    public ShopItem(String name, int price,int modifier ,int amount){
+    public ShopItem(String name, int price,int modifier ,String type,int amount){
         this.price = price;
         this.name = name;
         this.amount = amount;
+        this.type = type;
         this.modifier = modifier;
     }
 

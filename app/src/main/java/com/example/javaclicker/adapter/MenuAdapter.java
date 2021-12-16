@@ -64,12 +64,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
 
-        int price = localDataSet[position].price;
+        int price = (localDataSet[position].amount == 0)
+                ?(localDataSet[position].price)
+                :Math.round(localDataSet[position].price + (localDataSet[position].price*(localDataSet[position].amount * 1.8f)));
+
+        int production = (localDataSet[position].amount == 0)
+                ?localDataSet[position].modifier
+                :(localDataSet[position].modifier * localDataSet[position].amount);
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.price.setText(Formatter.formatBigNum(localDataSet[position].price));
+        viewHolder.price.setText(Formatter.formatBigNum(price));
         viewHolder.name.setText(localDataSet[position].name);
-        viewHolder.production.setText(Integer.toString((localDataSet[position].modifier * localDataSet[position].amount)));
+        viewHolder.production.setText(Integer.toString(production));
         viewHolder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

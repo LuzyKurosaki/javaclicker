@@ -47,7 +47,7 @@ public class FactoryFragment extends Fragment implements Observer {
         sellOil.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.barrels() * 4));
+                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.barrels() * 1));
                 activity.gameData.barrels(0);
             }
         });
@@ -55,7 +55,7 @@ public class FactoryFragment extends Fragment implements Observer {
         sellGas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.gas() * 8));
+                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.gas() * 4));
                 activity.gameData.gas(0);
             }
         });
