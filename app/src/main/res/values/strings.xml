@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">javaclicker</string>
+    <string name="_0">0</string>
+    <string name="shop">Shop</string>
+    <string name="factory">Factory</string>
+    <string name="s">/s</string>
+</resources>
