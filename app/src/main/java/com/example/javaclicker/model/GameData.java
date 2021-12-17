@@ -10,6 +10,7 @@ import androidx.room.Room;
 import com.example.javaclicker.MainActivity;
 import com.example.javaclicker.database.Database;
 import com.example.javaclicker.database.model.ShopItem;
+import com.example.javaclicker.fragment.FactoryFragment;
 import com.example.javaclicker.fragment.ShopFragment;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class GameData extends Observable {
     private int _gas;
 
     private GameData gameData;
-    public ShopFragment shopFragment;
     public ShopItem[] shopItems;
 
     protected MainActivity activity;
@@ -35,7 +35,9 @@ public class GameData extends Observable {
     }
     public void barrels(int barrels){
         synchronized (this){
-            this._barrels = barrels;
+            if(barrels < 2000000000){
+                this._barrels = barrels;
+            }
         }
         setChanged();
         notifyObservers();
@@ -45,7 +47,9 @@ public class GameData extends Observable {
     }
     public void cash(int cash){
         synchronized (this){
-            this._cash = cash;
+            if(cash < 2000000000){
+                this._cash = cash;
+            }
         }
         setChanged();
         notifyObservers();
@@ -55,7 +59,9 @@ public class GameData extends Observable {
     }
     public void gas(int gas){
         synchronized (this){
-            this._gas = gas;
+            if(gas < 2000000000){
+                this._gas = gas;
+            }
         }
         setChanged();
         notifyObservers();
@@ -111,56 +117,62 @@ public class GameData extends Observable {
                 @Override
                 public void run() {
                     try {
-                        Handler();
+                        while(true){
+                            Handler();
+                            Thread.sleep(3000);
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             });
-
-
-
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while(true){
+                            Thread.sleep(30000);
+                            SaveHandler();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         private void Handler() throws InterruptedException {
-            Thread.sleep(3000);
+            int oProd = 0;
+            int gProd = 0;
             for (ShopItem item : shopItems){
                 switch (item.type){
                     case "oil" :
                         barrels(barrels() + (item.amount * item.modifier));
+                        oProd = oProd + (item.amount * item.modifier);
                         break;
                     case "gas" :
                         if(barrels() <= (item.amount * item.modifier)){
                             gas(gas() + barrels());
                             barrels(0);
+                            gProd = gProd + barrels();
                         }else{
                             barrels(barrels() - (item.amount * item.modifier));
-                            gas((item.amount * item.modifier));
+                            gas(gas() + (item.amount * item.modifier));
+                            gProd = gProd + (item.amount * item.modifier);
                         }
                         break;
                 }
             }
+            activity.factoryFragment.update(oProd, gProd);
         }
 
         private void SaveHandler() throws InterruptedException {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(30000);
-                        SavePref();
-                        Save(db);
-                        activity.runOnUiThread(()->{
-                            Toast.makeText(activity, "Game Saved", Toast.LENGTH_SHORT).show();
+            SavePref();
+            Save(db);
+            activity.runOnUiThread(()->{
+                Toast.makeText(activity, "Game Saved", Toast.LENGTH_SHORT).show();
 
-                        });
-                        SaveHandler();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
             });
-
         }
 
     }
@@ -185,6 +197,5 @@ public class GameData extends Observable {
         setChanged();
         notifyObservers();
     }
-
 }
 

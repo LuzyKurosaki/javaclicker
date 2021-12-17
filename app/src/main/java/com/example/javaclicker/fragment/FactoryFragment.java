@@ -1,12 +1,11 @@
 package com.example.javaclicker.fragment;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 
@@ -16,60 +15,50 @@ import com.example.javaclicker.R;
 import java.util.Observable;
 import java.util.Observer;
 
-public class FactoryFragment extends Fragment implements Observer {
-    TextView oilCount;
-    TextView gasCount;
-    ImageView sellOil;
-    ImageView sellGas;
+public class FactoryFragment extends Fragment {
     MainActivity activity;
+    ProgressBar oProd;
+    ProgressBar oCon;
+    ProgressBar gProd;
+    ProgressBar gCon;
+    View view;
 
-
-    public FactoryFragment(MainActivity activity){
-        this.activity = activity;
+    public FactoryFragment(Activity activity){
+        this.activity = (MainActivity) activity;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
         return inflater.inflate(R.layout.fragment_factory, parent, false);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        oilCount = view.findViewById(R.id.factoryOilCount);
-        gasCount = view.findViewById(R.id.factoryGasCount);
-        sellOil = view.findViewById(R.id.sellOil);
-        sellGas = view.findViewById(R.id.sellGas);
-
-
-
-        sellOil.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.barrels() * 1));
-                activity.gameData.barrels(0);
-            }
-        });
-
-        sellGas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.gameData.cash(activity.gameData.cash() + (activity.gameData.gas() * 4));
-                activity.gameData.gas(0);
-            }
-        });
-
-        oilCount.setText(Integer.toString(activity.gameData.barrels()));
-        gasCount.setText(Integer.toString(activity.gameData.gas()));
+        this.view = view;
+        this.oProd =  (ProgressBar) view.findViewById(R.id.oProd);
+        this.oCon =  view.findViewById(R.id.oCon);
+        this.gProd =  view.findViewById(R.id.gProd);
+        this.gCon =  view.findViewById(R.id.gCon);
     }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void update(Observable observable, Object o) {
-        if(oilCount != null || gasCount != null){
-            oilCount.setText(Integer.toString(activity.gameData.barrels()));
-            gasCount.setText(Integer.toString(activity.gameData.gas()));
+    public void update(int oiProd,int gaProd){
+        if(view != null){
+            if(oiProd != 0 && gaProd != 0){
+                if(oiProd >= gaProd){
+                    int diff = (gaProd / oiProd) * 100;
+                    oProd.setProgress(100,true);
+                    oCon.setProgress(diff,true);
+                }
+                else{
+                    int diff = (oiProd / gaProd ) * 100;
+                    oProd.setProgress(diff,true);
+                    oCon.setProgress(100,true);
+                }
+                gProd.setProgress(100,true);
+                gCon.setProgress(0,true);
+            }else{
+                oProd.setProgress(100,true);
+                oCon.setProgress(0, true);
+            }
         }
     }
 }

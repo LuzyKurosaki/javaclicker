@@ -22,15 +22,19 @@ public class ShopItem {
     @ColumnInfo(name = "type")
     public String type;
 
+    @ColumnInfo(name = "is_selling")
+    public Boolean isSelling;
+
     @ColumnInfo(name = "amount")
     public int amount;
 
-    public ShopItem(String name, int price,int modifier ,String type,int amount){
+    public ShopItem(String name, int price,int modifier ,String type,int amount, boolean isSelling){
         this.price = price;
         this.name = name;
         this.amount = amount;
         this.type = type;
         this.modifier = modifier;
+        this.isSelling = isSelling;
     }
 
 }

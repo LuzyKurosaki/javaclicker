@@ -3,14 +3,12 @@ package com.example.javaclicker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.javaclicker.fragment.FactoryFragment;
+import com.example.javaclicker.fragment.MarketFragment;
 import com.example.javaclicker.fragment.ShopFragment;
 import com.example.javaclicker.lib.Formatter;
 import com.example.javaclicker.model.GameData;
@@ -25,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements Observer{
     public GameData gameData;
 
     public ShopFragment shopFragment;
-    private FactoryFragment factoryFragment;
+    private MarketFragment marketFragment;
+    public FactoryFragment factoryFragment;
 
     public ExecutorService executorService = Executors.newFixedThreadPool(4);
 
@@ -35,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements Observer{
         setContentView(R.layout.activity_main);
         this.gameData = new GameData(this);
         this.shopFragment = new ShopFragment(this);
-        this.factoryFragment =  new FactoryFragment(this);
-
+        this.marketFragment =  new MarketFragment(this);
+        this.factoryFragment = new FactoryFragment(this);
         findViewById(R.id.MainFrameLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +62,16 @@ public class MainActivity extends AppCompatActivity implements Observer{
                 findViewById(R.id.menu).setVisibility(View.VISIBLE);
             }
         });
+        findViewById(R.id.marketButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.menu, marketFragment, null)
+                        .commit();
+                findViewById(R.id.menu).setVisibility(View.VISIBLE);
+            }
+        });
         findViewById(R.id.factoryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements Observer{
 
         this.gameData.addObserver(shopFragment);
         this.gameData.addObserver(this);
-        this.gameData.addObserver(factoryFragment);
+        this.gameData.addObserver(marketFragment);
         this.gameData.Dispatch(executorService);
 
         setPrices();

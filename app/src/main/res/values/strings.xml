@@ -4,4 +4,6 @@
     <string name="shop">Shop</string>
     <string name="factory">Factory</string>
     <string name="s">/s</string>
+    <string name="market">Market</string>
+    <string name="upgrades">Upgrades</string>
 </resources>
